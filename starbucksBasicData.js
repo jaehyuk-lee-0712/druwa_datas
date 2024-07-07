@@ -1,25 +1,14 @@
-// lib / module setting
 const express = require("express");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
-const salt = bcrypt.genSaltSync(10);
 const axios = require("axios");
-const cherrio = require("cheerio");
+const cheerio = require("cheerio");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 const { time } = require("console");
-
-// app setting
-const app = express();
-
-// cors , cookie , token , secret code setting
-const secret = "bongpalscookieiswoomai";
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
-app.use(express.json());
-app.use(cookieParser());
-
+const path = require("path");
 
 // time.sleep 함수
 function sleep(ms) {
@@ -27,17 +16,16 @@ function sleep(ms) {
 }
 
 // 스타벅스 매장이름, 주소 추출 함수
-
 function getStoreBasicInfo(arr) {
   return arr.map(item => {
-    const $ = cherrio.load(item);
+    const $ = cheerio.load(item);
     const storeName = $('strong').text().trim();
-    const stroeAdd = $('p').text().trim();
-    return {storeName , stroeAdd}
-  })
+    const storeAddress = $('p').text().trim();
+    return { storeName, storeAddress };
+  });
 }
 
-// 날짜 함수
+// 현재 날짜를 YYYY-MM-DD 형식으로 반환하는 함수
 function getCurrentDate() {
   const date = new Date();
   const year = date.getFullYear();
@@ -102,9 +90,6 @@ const getStarBucksBasicInfoFromNaver = async () => {
 getStarBucksBasicInfoFromNaver().catch(error => {
   console.error("Error fetching data:", error);
   process.exit(1);  // 에러 발생 시 프로세스 종료
-});
-
-// port setting.
-app.listen(9000, () => {
-  console.log("서버 다음 포트에서 실행 중 :  9000");
+}).finally(() => {
+  process.exit(0);  // 작업이 완료되면 프로세스를 정상 종료
 });
