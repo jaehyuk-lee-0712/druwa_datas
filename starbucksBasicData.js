@@ -49,74 +49,62 @@ function getCurrentDate() {
 // apis
 // 크롤링 테스트
 const getStarBucksBasicInfoFromNaver = async () => {
-  try {
-    const browsr = await puppeteer.launch({
-      headless: true,  // headless 모드로 실행
-      executablePath: '/usr/bin/google-chrome', // Chrome의 경로 지정
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
-    });
+  const browser = await puppeteer.launch({
+    headless: true,  // headless 모드로 실행
+    executablePath: '/usr/bin/google-chrome', // Chrome의 경로 지정
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+  });
 
+  const context = browser.defaultBrowserContext();
+  await context.overridePermissions("https://www.starbucks.co.kr", []);
 
-   const context = browsr.defaultBrowserContext();
-   await context.overridePermissions("https://www.starbucks.co.kr", []);
+  const page = await browser.newPage();
+  await page.setViewport({ width: 1920, height: 1080 });
 
-   const page = await browsr.newPage();
-   await page.setViewport({width : 1920 , height : 1080});
+  // 페이지 로드 대기
+  await page.goto("https://www.starbucks.co.kr/store/store_map.do", {
+    waitUntil: 'networkidle0',
+    timeout: 0
+  });
 
+  await page.waitForSelector('.quickSearchResultBox', { visible: true });
 
-    await page.goto("https://www.starbucks.co.kr/store/store_map.do", {
-      waitUntil: 'networkidle0',
-      timeout: 0
-    });
+  await page.$eval('.find_store_cont_header > .btn_opt_chk > a', el => el.click());
 
+  await page.waitForSelector('.opt_select_pop', { visible: true });
+  await page.waitForSelector('.opt_select_dl1', { visible: true });
 
-    await page.waitForSelector('.quickSearchResultBox', { visible: true });
-    
-    
-    await page.$eval('.find_store_cont_header > .btn_opt_chk > a' , el => el.click());
+  await page.$eval('.opt_select_dl1 .right #type2', el => el.click());
 
-    // opt_select_pop
+  await page.waitForSelector('.opt_sel_btns', { visible: true });
+  await page.$eval('.opt_sel_btns .li2 > a', el => el.click());
 
-    
-      await page.waitForSelector('.opt_select_pop', { visible: true });
+  await page.waitForSelector('#mCSB_1_container', { visible: true });
 
-      await page.waitForSelector('.opt_select_dl1' , {visible : true}) 
+  await sleep(2000);
 
+  const liArray = await page.$$eval('#mCSB_1_container ul li', elements => elements.map(el => el.innerHTML));
 
-      await page.$eval('.opt_select_dl1 .right #type2', el => el.click());
+  const storeBasicInfo = getStoreBasicInfo(liArray);
 
-      await page.waitForSelector('.opt_sel_btns' , {visible : true}) ;
-      
-      await page.$eval('.opt_sel_btns .li2 > a' , el=>el.click());
+  console.log(storeBasicInfo);
 
-      await page.waitForSelector('#mCSB_1_container' , {visible : true});
-      
-      await sleep(2000);
-      const liArray = await page.$$eval('#mCSB_1_container ul li', elements => elements.map(el => el.innerHTML));
+  const date = getCurrentDate();
+  const fileName = `storeInfo-${date}.json`;
 
-      const stroeBasicInfo = getStoreBasicInfo(liArray);
+  fs.writeFileSync(fileName, JSON.stringify(storeBasicInfo, null, 2), 'utf8');
+  console.log(`Successfully wrote to ${fileName}`);
 
-      const date= getCurrentDate();
-      const fileName = `storeInfo-${date}.json`;
-
-    fs.writeFile(fileName, JSON.stringify(stroeBasicInfo, null, 2), 'utf8', (err) => {
-      if (err) {
-        console.error("Error writing to file", err);
-      } else {
-        console.log("Successfully wrote to storeInfo.json");
-      }
-    });
-
-  } catch (error) {
-      console.error("Error fetching data:", error);
-    process.exit(1); 
-  }
+  await browser.close();  // 브라우저를 닫습니다
 };
 
-getStarBucksBasicInfoFromNaver();
+// 비동기 함수 호출 및 에러 처리
+getStarBucksBasicInfoFromNaver().catch(error => {
+  console.error("Error fetching data:", error);
+  process.exit(1);  // 에러 발생 시 프로세스 종료
+});
 
 // port setting.
-
 app.listen(9000, () => {
   console.log("서버 다음 포트에서 실행 중 :  9000");
 });
