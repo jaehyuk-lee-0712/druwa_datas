@@ -64,12 +64,16 @@ const getStarBucksBasicInfoFromNaver = async () => {
 
   await page.$eval('.opt_select_dl1 .right #type2', el => el.click());
 
+  await sleep(5000);
+
   await page.waitForSelector('.opt_sel_btns', { visible: true });
   await page.$eval('.opt_sel_btns .li2 > a', el => el.click());
 
+  await sleep(5000);
+
   await page.waitForSelector('#mCSB_1_container', { visible: true });
 
-  await sleep(2000);
+  await sleep(5000);
 
   const liArray = await page.$$eval('#mCSB_1_container ul li', elements => elements.map(el => el.innerHTML));
 
