@@ -64,7 +64,7 @@ const getStarBucksBasicInfoFromNaver = async () => {
 
 
     await page.goto("https://www.starbucks.co.kr/store/store_map.do", {
-      waitUntil: 'networkidle2',
+      waitUntil: 'networkidle0',
       timeout: 0
     });
 
