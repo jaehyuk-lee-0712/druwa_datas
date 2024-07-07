@@ -50,12 +50,10 @@ function getCurrentDate() {
 // 크롤링 테스트
 const getStarBucksBasicInfoFromNaver = async () => {
   try {
-   const browsr = await puppeteer.launch({
-    headless : false ,
-    args : [
-      '--window-size=1920,1080'
-    ]
-   });
+    const browsr = await puppeteer.launch({
+      headless: true,  
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--single-process', '--disable-gpu', '--disable-software-rasterizer', '--disable-extensions']
+    });
 
 
    const context = browsr.defaultBrowserContext();
