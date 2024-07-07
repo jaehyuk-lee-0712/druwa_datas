@@ -62,7 +62,12 @@ const getStarBucksBasicInfoFromNaver = async () => {
    const page = await browsr.newPage();
    await page.setViewport({width : 1920 , height : 1080});
 
-   await page.goto("https://www.starbucks.co.kr/store/store_map.do");
+
+    await page.goto("https://www.starbucks.co.kr/store/store_map.do", {
+      waitUntil: 'networkidle2',
+      timeout: 0
+    });
+
 
     await page.waitForSelector('.quickSearchResultBox', { visible: true });
     
