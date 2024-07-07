@@ -107,7 +107,8 @@ const getStarBucksBasicInfoFromNaver = async () => {
     });
 
   } catch (error) {
-    console.error("Error fetching data:", error);
+      console.error("Error fetching data:", error);
+    process.exit(1); 
   }
 };
 
