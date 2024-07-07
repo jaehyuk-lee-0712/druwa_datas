@@ -1,8 +1,12 @@
 name: Fetch Starbucks Info
 
 on:
+  workflow_dispatch:  # 수동 실행을 허용
   schedule:
-    - cron: '0 17 * * *'  # UTC 기준으로 매일 17시에 실행 (한국 시간 새벽 02시)
+    - cron: '0 17 * * *'  # UTC 기준으로 매일 17시에 실행 (한국 시간 새벽 2시)
+  push:
+    branches:
+      - main  # main 브랜치에 푸시될 때 실행
 
 jobs:
   fetch-store-info:
@@ -25,8 +29,8 @@ jobs:
 
     - name: Commit and push results
       run: |
-        git config --local user.email "actions@github.com"
-        git config --local user.name "GitHub Actions"
+        git config --local user.email "dlwogur0712@gmail.com"
+        git config --local user.name "jaehyuk-lee-0712"
         git add storeInfo-*.json
         git commit -m "Update store info"
         git push
