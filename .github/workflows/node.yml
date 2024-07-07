@@ -23,13 +23,21 @@ jobs:
     - name: Install dependencies
       run: npm install
 
+    - name: Install Chrome
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget unzip
+        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt-get -f install -y
+        google-chrome --version
+
     - name: Run the script
       run: node starbucksBasicData.js
 
     - name: Commit and push results
       run: |
-        git config --local user.email "dlwogur0712@gmail.com"
-        git config --local user.name "jaehyuk-lee-0712"
+        git config --local user.email "actions@github.com"
+        git config --local user.name "GitHub Actions"
         git add storeInfo-*.json
         git commit -m "Update store info"
         git push
