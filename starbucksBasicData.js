@@ -50,7 +50,7 @@ function getCurrentDate() {
 // 크롤링 테스트
 const getStarBucksBasicInfoFromNaver = async () => {
   try {
-    const browser = await puppeteer.launch({
+    const browsr = await puppeteer.launch({
       headless: true,  // headless 모드로 실행
       executablePath: '/usr/bin/google-chrome', // Chrome의 경로 지정
       args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
