@@ -19,8 +19,8 @@ function sleep(ms) {
 function getStoreBasicInfo(arr) {
   return arr.map(item => {
     const $ = cheerio.load(item);
-    const storeName = $('strong').text().trim();
-    const storeAddress = $('p').text().trim();
+    const title = $('strong').text().trim();
+    const address = $('p').text().trim();
     return { storeName, storeAddress };
   });
 }
@@ -35,7 +35,6 @@ function getCurrentDate() {
 }
 
 // apis
-// 크롤링 테스트
 const getStarBucksBasicInfoFromNaver = async () => {
   const browser = await puppeteer.launch({
     headless: true,  // headless 모드로 실행
@@ -78,9 +77,7 @@ const getStarBucksBasicInfoFromNaver = async () => {
   const liArray = await page.$$eval('#mCSB_1_container ul li', elements => elements.map(el => el.innerHTML));
 
   const storeBasicInfo = getStoreBasicInfo(liArray);
-
-  console.log(storeBasicInfo);
-
+  
   const date = getCurrentDate();
   const fileName = `starbucks/starbucks_${date}.json`;
 
