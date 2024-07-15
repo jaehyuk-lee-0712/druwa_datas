@@ -82,7 +82,7 @@ const getStarBucksBasicInfoFromNaver = async () => {
   console.log(storeBasicInfo);
 
   const date = getCurrentDate();
-  const fileName = `storeInfo-${date}.json`;
+  const fileName = `starbucks/starbucks_${date}.json`;
 
   fs.writeFileSync(fileName, JSON.stringify(storeBasicInfo, null, 2), 'utf8');
   console.log(`Successfully wrote to ${fileName}`);
