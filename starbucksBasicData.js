@@ -21,7 +21,7 @@ function getStoreBasicInfo(arr) {
     const $ = cheerio.load(item);
     const title = $('strong').text().trim();
     const address = $('p').text().trim();
-    return { storeName, storeAddress };
+    return { title, address };
   });
 }
 
