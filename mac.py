@@ -12,7 +12,7 @@ import json
 
 # 현재 날짜 가져오기
 current_date = datetime.now().strftime("%Y-%m-%d")
-filename = f"macdonald_dt_{current_date}.json"
+filename = f"macdonald_{current_date}.json"
 
 # run webdriver
 driver = webdriver.Chrome()
@@ -21,7 +21,7 @@ url = f'https://map.naver.com/p/search/{keyword}'
 driver.get(url)
 action = ActionChains(driver)
 
-naver_res = pd.DataFrame(columns=['업체명', '주소'])
+naver_res = pd.DataFrame(columns=['title', 'address'])
 last_name = ''
 
 def search_iframe():
@@ -66,8 +66,8 @@ def crawling_main():
         search_iframe()
 
     naver_temp = pd.DataFrame({
-        '업체명': name_list,
-        '주소': addr_list
+        'title': name_list,
+        'address': addr_list
     })
     naver_res = pd.concat([naver_res, naver_temp])
 

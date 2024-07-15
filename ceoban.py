@@ -46,9 +46,9 @@ for track in tracks:
         image_element = soup.select_one(".fotorama__img")
         image_url = image_element.get('src') if image_element else None
         ceoban_data.append({
-            "second_td": second_td,
-            "third_td": third_td,
-            "image_url": image_url
+            "title": second_td,
+            "address": third_td,
+            "img": image_url
         })
 
 print(ceoban_data)
